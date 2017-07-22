@@ -9,14 +9,14 @@
 </head>
 
 <body>
-    <form action="aa" method="post">
+    <form action="aa" method="get">
         <div class="username">
             <label for="username">用户名：</label>
-            <input id='username' type="text">
+            <input id='username' name='username' type="text">
         </div>
         <div class="userpassword">
             <label for="userpassword">密码：</label>
-            <input id='userpassword' type="password">
+            <input id='userpassword' name='userpassword' type="password">
         </div>
         <div class="sex">
             <label>性别：</label>
@@ -36,7 +36,7 @@
         </div>
         <div class="descrip">
             <label for="descrip">个人简介：</label>
-            <textarea id="descrip" cols="30" rows="10"></textarea>
+            <textarea id="descrip" name='descrip' cols="30" rows="10"></textarea>
         </div>
         <div class="myCar">
             <label>我的车车：</label>
