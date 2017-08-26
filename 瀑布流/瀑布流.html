@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>瀑布流布局</title>
+    <style>
+        ul,body,li {
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            position: relative;
+        }
+        ul {
+            position: relative;
+        }
+        li {
+            display: inline-block;
+            list-style: none;
+            position: absolute;
+            padding: 5px;
+            transition: all 1s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <ul>
+            <li>
+                <img src="https://unsplash.it/300/298/">
+            </li>
+            <li>
+                <img src="https://unsplash.it/300/500/">
+            </li>
+            <li>
+                <img src="https://unsplash.it/300/300/">
+            </li>
+            <li>
+                <img src="https://unsplash.it/300/400/">
+            </li>
+            <li>
+                <img src="https://unsplash.it/300/600/">
+            </li>
+            <li>
+                <img src="https://unsplash.it/300/333/">
+            </li>
+            <li>
+                <img src="https://unsplash.it/300/565/">
+            </li>
+            <li>
+                <img src="https://unsplash.it/300/353/">
+            </li>
+            <li>
+                <img src="https://unsplash.it/300/797/">
+            </li>
+            <li>
+                <img src="https://unsplash.it/300/456/">
+            </li>
+            <li>
+                <img src="https://unsplash.it/300/654/">
+            </li>
+            <li>
+                <img src="https://unsplash.it/300/521/">
+            </li>
+            <li>
+                <img src="https://unsplash.it/300/555/">
+            </li>
+            <li>
+                <img src="https://unsplash.it/300/231/">
+            </li>
+            <li>
+                <img src="https://unsplash.it/300/256/">
+            </li>
+            <li>
+                <img src="https://unsplash.it/300/512/">
+            </li>
+            <li>
+                <img src="https://unsplash.it/300/460/">
+            </li>
+            <li>
+                <img src="https://unsplash.it/300/302/">
+            </li>
+            <li>
+                <img src="https://unsplash.it/300/310/">
+            </li>              
+        </ul>
+    </div>
+    <script src='./jquery-3.2.1.min.js'></script>
+    <script>
+        var WaterFull = (function(){
+            function init(){
+                waterFull()
+                $(window).resize(function(){
+                    waterFull()
+                })
+            }
+            function waterFull() {
+                var imgs = $('.container>ul>li')
+                var imgWidth = imgs.width()
+                var arrItem = []
+                var widLen = Math.floor($('.container').width() / imgWidth)
+                console.log(widLen)
+                for(var i=0;i<widLen;i++){
+                    arrItem[i] = 0
+                }
+                imgs.each(function(){
+                    var minValue = Math.min.apply(null,arrItem)
+                    var minIndex = arrItem.indexOf(minValue)
+                    $(this).css({
+                        'top':minValue,
+                        'left':$(this).outerWidth(true) * minIndex
+                    })
+                    arrItem[minIndex] += $(this).outerHeight(true)
+                })
+            }
+            return {
+                init: init
+            }
+        })()
+        WaterFull.init()
+    </script>
+</body>
+</html>

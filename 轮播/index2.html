@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>轮播图</title>
+    <style>
+        body,li,ul,img {
+            margin: 0;
+            padding: 0;
+        }
+        ul,li {
+            list-style: none;
+        }
+        #container {
+            width: 400px;
+            height: 225px;
+            overflow: hidden;
+            position: relative;
+        }
+        .img-ct {
+            font-size: 0;
+            /*width: 1600px;  */ /*宽度不应该写死，而是应该通过js计算*/
+            position: absolute;
+        }
+        .img-ct>li {
+            display: inline-block;
+        }
+        .img-ct>li>img {
+            width: 400px;
+        }
+        .arrow-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #fff;
+            position: absolute;
+            z-index: 2;
+            text-decoration: none;
+            font-size: 26px;
+            color: #000;
+            line-height: 30px;
+            text-align: center;
+            background-color: #fff;
+            display: block;
+            border-radius: 50%;
+            opacity: .4;
+        }
+        .pre {
+            top: 100px;
+            left: 20px;
+        }
+        .next {
+            top: 100px;
+            left: 350px;
+        }
+        .bullet {
+            position: absolute;
+            z-index: 3;
+            top: 80%;
+            left: 50%;
+            margin-left: -50px;
+        }
+        .bullet li {
+            display: inline-block;
+        }
+        .bullet li a {
+            display: inline-block;
+            font-size: 50px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+        }
+        .active .active {
+            color: #5f2;
+        }
+    </style>
+</head>
+<body>
+    <div id='container'>
+        <ul class='img-ct'>
+            <li><img src="./img/img1.jpg"></li>
+            <li><img src="./img/img2.jpg"></li>
+            <li><img src="./img/img3.jpg"></li>
+            <li><img src="./img/img4.jpg"></li>         
+        </ul>
+        <a href="#" class='arrow-btn pre'> < </a>
+        <a href="#" class="arrow-btn next"> > </a>
+        <ul class='bullet'>
+            <li class='active'> <a class='active' href='#'>-</a></li>
+            <li><a href='#'>-</a></li>
+            <li><a href='#'>-</a></li>
+            <li><a href='#'>-</a></li>
+        </ul>
+    </div>
+    <script src="./jquery-3.2.1.min.js"></script>
+    <script>
+        var $imgs = $('.img-ct>li')   //放图片的li
+        var imgCount = $imgs.length   //图片的数量
+        var imgWidth = $imgs.width()  //图片的宽度
+        var pageIndex = 0;  //当前显示的是第几张图
+        var $bullets = $('.bullet li')
+        //按钮
+        var $preBtn = $('.pre')
+        var $nextBtn = $('.next')
+        //克隆第一个到末尾  克隆最后一个到开头
+        var $imgCt = $('.img-ct')
+        $imgCt.append($imgs.first().clone())
+        $imgCt.prepend($imgs.last().clone())
+        //给容器设置宽度
+        $imgCt.width((imgCount+2)*imgWidth)
+        //让用户看到第一张图片
+        $imgCt.css('left',-imgWidth)
+
+        var isAnimate=false //锁
+        //按钮绑定事件
+        console.log($preBtn)
+        $preBtn.click(function(){
+            playPre(1)
+        })
+        $nextBtn.click(function(){
+            playNext(1)
+        })
+        //向前滚动一格的函数
+        function playPre(times) {
+            console.log(1)
+            if(isAnimate){
+                return false
+            }
+            isAnimate=!isAnimate
+            $imgs.eq(pageIndex).fadeOut()
+            pageIndex-=times
+            if(pageIndex===-1){
+                pageIndex=imgCount-1
+            }
+            $imgs.eq(pageIndex).fadeIn()
+            isAnimate=!isAnimate
+            isActive()
+        }
+        //向后滚钉一格的函数
+        function playNext(times) {
+            if(isAnimate){
+                return false
+            }
+            isAnimate=!isAnimate
+            $imgs.eq(pageIndex).fadeOut()
+            pageIndex+=times
+            if(pageIndex===imgCount){
+                pageIndex=0
+            }
+            $imgs.eq(pageIndex).fadeIn()
+            isAnimate=!isAnimate
+            isActive()
+        }
+        //给导航的点加样式
+        function isActive(){
+            $bullets.removeClass('active').children().removeClass('active')
+            $bullets.eq(pageIndex)
+                    .addClass('active').children().addClass('active')
+        }
+
+        //点击导航直接滚动到图片
+        $bullets.click(function(){
+            var index= $(this).index()
+            var moveLen = pageIndex-index
+            if(moveLen){
+                playPre(moveLen)
+            }else{
+                playNext(moveLen)
+            }
+        })
+
+
+        setInterval(function(){
+            playNext(1)
+        },3000)
+    </script> 
+</body>
+</html>
