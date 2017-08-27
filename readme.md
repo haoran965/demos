@@ -3,7 +3,7 @@
 
 ### 朴素 (不使用JavaScript，只使用HTML和CSS)
 
-[介绍性网站](https://a775691134.github.io/demos/介绍性网站/demo.html)
+[介绍性网站](https://a775691134.github.io/demos/介绍性网站/demo2.html)
 
 [我的作品展示](https://a775691134.github.io/demos/作品展示/作品展示.html)
 
