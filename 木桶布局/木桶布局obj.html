@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>木桶布局</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        figure {
+            display: inline-block;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin: 0;
+            padding: 0;
+            font-size: 0;
+        }
+        img {
+            padding: 7px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container"></div>
+
+    <script src="../jquery-3.2.1.min.js"></script>
+
+    <script>
+        function MuTong($main,baseHeight) {
+            this.$main = $main
+            this.windowWidth = $(window).width()-20
+            this.baseHeight = baseHeight
+            this.rowList = []
+            this.rowTotalWidth = 0
+        }
+
+        MuTong.prototype.layout = function (list,rowTotalWidth,obj){
+            console.log(obj)
+            list.forEach(function(image){
+                var $imageContainer = $('<figure></figure>')
+                var $image = $('<img src='+image.webformatURL+'>')
+                $image.height( (obj.windowWidth / rowTotalWidth * obj.baseHeight))
+                var imageWidth =  ( image.webformatWidth / image.webformatHeight ) * $image.height() -14
+                $image.width(imageWidth) 
+                $imageContainer.append($image)
+                $main.append($imageContainer)
+            })
+        }
+
+        MuTong.prototype.loadImage=function (obj,jsonData){
+            rowTotalWidth = 0
+            jsonData.hits.forEach(function(image) {
+                image.newHeight = obj.baseHeight
+                image.newWidth = (image.webformatWidth / image.webformatHeight) * image.newHeight
+                if(image.newWidth + rowTotalWidth > obj.windowWidth){
+                    MuTong.prototype.layout(obj.rowList,rowTotalWidth,obj)
+                    obj.rowList = [image]
+                    rowTotalWidth = image.newWidth
+                }else {
+                    obj.rowList.push(image)
+                    rowTotalWidth += image.newWidth
+                }
+                // newHeight / newWidth  = webformatHeight / webformatWidth
+            })
+        }
+
+        MuTong.prototype.getImage = function(){
+            var objMuTong = this        
+            $.ajax({
+                type: 'get',
+                url: 'http://pixabay.com/api/',
+                data: {
+                    key: '6278066-2fb75691268cab806acb6ec75',
+                    image_type: 'photo',
+                    per_page: '40'
+                },
+                success: function(data){
+                    MuTong.prototype.loadImage(objMuTong,data)
+                },
+                error: function(data,error){
+                    console.log(error)
+                }
+            })
+            return status;
+        }
+
+        var $main = $('.container')
+        var mutong =  new MuTong($main,200)
+        mutong.getImage()
+    </script>
+</body> 
+</html>

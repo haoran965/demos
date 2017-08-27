@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>木桶布局</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f67;
+        }
+        figure {
+            display: inline-block;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin: 0;
+            padding: 0;
+            font-size: 0;
+        }
+        img {
+            padding: 7px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container"></div>
+
+    <script src="../jquery-3.2.1.min.js"></script>
+
+    <script>
+        var $main = $('.container')
+        var windowWidth = $(window).width()
+
+        var $imgs = $('#imgs')
+
+        var baseHeight = 200
+
+        var rowList = []
+
+        var rowTotalWidth = 0
+
+        getImgInfo()
+
+
+        function getImgInfo(){ //获取图片
+            $.ajax({
+                type: 'get',
+                url: 'http://pixabay.com/api/',
+                data: {
+                    key: '6278066-2fb75691268cab806acb6ec75',
+                    image_type: 'photo',
+                    per_page: '20'
+                },
+                success: function(data){
+                    console.log(data.hits[0])
+                    loadImg(data)
+                },
+                error: function(data,error){
+                    console.log(error)
+                }
+            })
+        }
+        
+        function loadImg(jsonData){   
+            jsonData.hits.forEach(function(imgInfo) {
+                imgInfo.newHeight = baseHeight
+                imgInfo.newWidth = (imgInfo.webformatWidth / imgInfo.webformatHeight) * imgInfo.newHeight
+                
+                if(imgInfo.newWidth + rowTotalWidth > windowWidth){
+                    layout(rowList,rowTotalWidth)
+                    rowList = [imgInfo]
+                    rowTotalWidth = imgInfo.newWidth
+                }else {
+                    rowList.push(imgInfo)
+                    rowTotalWidth += imgInfo.newWidth
+                }
+                // newHeight / newWidth  = webformatHeight / webformatWidth
+            })
+        }
+
+        function layout(list,rowTotalWidth){
+            list.forEach(function(imgInfo){
+                var $imgCt = $('<figure></figure>')
+                var $img = $('<img src='+imgInfo.webformatURL+'>')
+                $img.height( (windowWidth / rowTotalWidth * baseHeight))
+                var imgWidth =  ( imgInfo.webformatWidth / imgInfo.webformatHeight ) * $img.height()-14
+                $img.width(imgWidth) 
+                $imgCt.append($img)
+                $main.append($imgCt)
+            })
+        }
+    </script>
+</body> 
+</html>
