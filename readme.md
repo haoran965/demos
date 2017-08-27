@@ -13,4 +13,5 @@
 
 [瀑布流布局](https://a775691134.github.io/demos/瀑布流/瀑布流.html)
 
-[木桶布局](https://a775691134.github.io/demos/木桶布局/木桶布局obj.html)
+[木桶布局](http://js.jirengu.com/miqid/3)
+无法在Github上面展示，放到了JS Bin中
